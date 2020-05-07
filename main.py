@@ -19,13 +19,23 @@ class ICSReader():
 class MyClient(discord.Client):
     a = defaultdict(list)
 
-    def check_birthdays(self):
-        threading.Timer(3600.0, self.check_birthdays).start()
-        if datetime.now().hour == 00:
-            text = "LET'S PARTY!\n"
-            for bd in self.a[datetime.now().day]:
-                text += "> " + bd.name + " is on " + bd.begin.format("MMMM DD") + "\n"
-            print(text)
+    def todays_birthdays(self):
+        threading.Timer(3600.0, self.todays_birthdays).start()
+        now = datetime.now()
+        
+        if self.a[now.month]:
+            b = defaultdict(list)
+            for bd in self.a[now.month]:
+                b[bd.begin.day].append(bd)
+            if now.hour == 00:
+                if b[now.day]:
+                    for bd in b[now.day]:
+                        print(bd)
+                else:
+                    print("No Birthday's Today")
+        else:
+            print("No birthday's this month")
+
             
     async def on_ready(self):
         print('Logged on as', self.user)
@@ -35,7 +45,7 @@ class MyClient(discord.Client):
         for birthday in birthdays:
             self.a[birthday.begin.month].append(birthday)
 
-        self.check_birthdays()
+        self.todays_birthdays()
 
     async def on_message(self, message):
         if message.author == self.user:
