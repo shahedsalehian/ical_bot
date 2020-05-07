@@ -66,3 +66,6 @@ class MyClient(discord.Client):
 client = MyClient()
 client.run(os.environ['ACCESS_TOKEN'])
 
+# TODO:
+# 1. Graceful shutdown of bot
+# 2. Find current channel of bot and send message (on_ready)
