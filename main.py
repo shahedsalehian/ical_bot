@@ -20,9 +20,12 @@ class MyClient(discord.Client):
     a = defaultdict(list)
 
     def check_birthdays(self):
-        threading.Timer(5.0, self.check_birthdays).start()
-        if datetime.now().minute == 44:
-            print("Hello World")
+        threading.Timer(3600.0, self.check_birthdays).start()
+        if datetime.now().hour == 00:
+            text = "LET'S PARTY!\n"
+            for bd in self.a[datetime.now().day]:
+                text += "> " + bd.name + " is on " + bd.begin.format("MMMM DD") + "\n"
+            print(text)
             
     async def on_ready(self):
         print('Logged on as', self.user)
