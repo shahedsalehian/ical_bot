@@ -20,7 +20,7 @@ class MyClient(discord.Client):
     a = defaultdict(list)
 
     async def todays_birthdays(self, channel):
-        threading.Timer(600.0, self.todays_birthdays).start()
+        threading.Timer(3600.0, self.todays_birthdays).start()
         now = datetime.now()
 
         if self.a[now.month]:
