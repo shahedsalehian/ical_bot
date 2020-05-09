@@ -29,12 +29,14 @@ class MyClient(discord.Client):
                 b[bd.begin.day].append(bd)
             if now.hour == 00:
                 if b[now.day]:
+                    text = "Here are today's birthdays: \n"
                     for bd in b[now.day]:
-                        await channel.send(bd)
+                        text += "> " + bd.name + "\n"
+                        await channel.send(text)
                 else:
-                    await channel.send("No Birthday's Today")
+                    print("No Birthday's Today")
         else:
-            await channel.send("No birthday's this month")
+            print("No birthday's this month")
 
             
     async def on_ready(self):
@@ -80,5 +82,4 @@ client = MyClient()
 client.run(os.environ['ACCESS_TOKEN'])
 
 # TODO:
-# 1. Graceful shutdown of bot
-# 2. Find current channel of bot and send message (on_ready)
+# 1. Graceful shutdown of bot 
