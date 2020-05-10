@@ -18,9 +18,35 @@ class ICSReader():
 
 class MyClient(discord.Client):
     a = defaultdict(list)
+    months = {
+        'january':'01',
+		'february':'02',
+		'march':'03',
+		'april':'04',
+		'may':'05',
+		'june':'06',
+		'july':'07',
+		'august':'08',
+		'september':'09',
+		'october':'10',
+		'november':'11',
+		'december':'12',
+        'jan':'01',
+		'feb':'02',
+		'mar':'03',
+		'apr':'04',
+		'may':'05',
+		'jun':'06',
+		'jul':'07',
+		'aug':'08',
+		'sep':'09',
+		'oct':'10',
+		'nov':'11',
+		'dec':'12'
+    }
 
-    async def todays_birthdays(self, channel):
-        threading.Timer(3600.0, self.todays_birthdays).start()
+    async def print_todays_birthdays(self, channel):
+        threading.Timer(3600.0, self.print_todays_birthdays).start()
         now = datetime.now()
 
         if self.a[now.month]:
@@ -50,7 +76,7 @@ class MyClient(discord.Client):
         for guild in self.guilds:
             for channel in guild.channels:
                 if str(channel) == "birthdays":
-                    await self.todays_birthdays(channel)
+                    await self.print_todays_birthdays(channel)
 
     async def on_message(self, message):
         if message.author == self.user:
@@ -60,26 +86,39 @@ class MyClient(discord.Client):
             await message.channel.send('pong')
             return
 
-        x = re.search("!bd [0-1][0-9]", message.content)
-        if x == None:
+        if message.content == '!help':
+            text = ("Valid input to get the birthdays of a month:\n"
+                    "!bd 1 - 12\n"
+                    "!bd 01 - 12\n"
+                    "!bd jan - dec\n"
+                    "!bd january - december\n"
+                    "e.g.: `!bd 05` or `!bd may`")
+            await message.channel.send(text)
             return
-        else:
-            month = int(x.string.split(" ")[1])
-            if (month > 0) and (month <= 12):
-                if len(self.a[month]) == 0:
-                    await message.channel.send("No Birthdays this month!")
-                    return
 
-                text = "Here are the birthdays of this month: \n"
-                for birthday in self.a[month]:
-                    text += "> " + birthday.name + " is on " + birthday.begin.format("MMMM DD") + "\n"
-                
-                await message.channel.send(text)
+        if re.search("!bd [0-1]?[0-9]", message.content):
+            await self.print_birthdays_by_month(int(message.content.split(" ")[1]), message)
+            return
+
+        if re.search("!bd (?:jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|june?|july?|aug(?:ust)?|sep(?:tember)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?)", message.content.lower()):
+            month = int(self.months[message.content.split(" ")[1].lower()])
+            await self.print_birthdays_by_month(month, message)
+            return
+        
+        return
+        
+
+    async def print_birthdays_by_month(self, month, message):
+        if (month > 0) and (month <= 12):
+            if len(self.a[month]) == 0:
+                await message.channel.send("No Birthdays this month!")
                 return
 
+            text = "Here are the birthdays of this month: \n"
+            for birthday in self.a[month]:
+                text += "> " + birthday.name + " is on " + birthday.begin.format("MMMM DD") + "\n"
+
+            await message.channel.send(text)
     
 client = MyClient()
 client.run(os.environ['ACCESS_TOKEN'])
-
-# TODO:
-# 1. Graceful shutdown of bot 
