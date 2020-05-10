@@ -49,7 +49,7 @@ class MyClient(discord.Client):
 
         for guild in self.guilds:
             for channel in guild.channels:
-                if str(channel) == "general":
+                if str(channel) == "birthdays":
                     await self.todays_birthdays(channel)
 
     async def on_message(self, message):
