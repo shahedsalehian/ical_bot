@@ -94,11 +94,11 @@ class MyClient(discord.Client):
             await message.channel.send(text)
             return
 
-        if re.search("!bd [0-1]?[0-9]", message.content):
+        if re.search("!bde? [0-1]?[0-9]", message.content):
             await self.print_birthdays_by_month(int(message.content.split(" ")[1]), message)
             return
 
-        if re.search("!bd (?:jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|june?|july?|aug(?:ust)?|sep(?:tember)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?)", message.content.lower()):
+        if re.search("!bde? (?:jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|june?|july?|aug(?:ust)?|sep(?:tember)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?)", message.content.lower()):
             month = int(self.months[message.content.split(" ")[1].lower()])
             await self.print_birthdays_by_month(month, message)
             return
