@@ -35,7 +35,6 @@ class MyClient(discord.Client):
 		'feb':'02',
 		'mar':'03',
 		'apr':'04',
-		'may':'05',
 		'jun':'06',
 		'jul':'07',
 		'aug':'08',
@@ -64,7 +63,6 @@ class MyClient(discord.Client):
         else:
             print("No birthday's this month")
 
-            
     async def on_ready(self):
         print('Logged on as', self.user)
         reader = ICSReader()
@@ -107,7 +105,6 @@ class MyClient(discord.Client):
         
         return
         
-
     async def print_birthdays_by_month(self, month, message):
         if (month > 0) and (month <= 12):
             if len(self.a[month]) == 0:
