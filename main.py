@@ -90,7 +90,7 @@ class MyClient(discord.Client):
                     "!bd 01 - 12\n"
                     "!bd jan - dec\n"
                     "!bd january - december\n"
-                    "e.g.: `!bd 05` or `!bd may`")
+                    "e.g.: `!bd 05` or `!bd 5` or `!bd may`")
             await message.channel.send(text)
             return
 
