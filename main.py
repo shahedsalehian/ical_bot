@@ -52,7 +52,7 @@ class MyClient(discord.Client):
             b = defaultdict(list)
             for bd in self.a[now.month]:
                 b[bd.begin.day].append(bd)
-            if now.hour == 00:
+            if now.hour == 12 and now.minute == 16:
                 if b[now.day]:
                     text = "Here are today's birthdays: \n"
                     for bd in b[now.day]:
