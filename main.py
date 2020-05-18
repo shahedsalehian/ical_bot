@@ -61,7 +61,7 @@ class MyClient(discord.Client):
                     for channel in guild.channels:
                         if str(channel) == "🎁birthdays" or str(channel) == "general":
                             await channel.send(text)
-        asyncio.sleep(3600)
+        await asyncio.sleep(3600)
 
     async def on_ready(self):
         print('Logged on as', self.user)
