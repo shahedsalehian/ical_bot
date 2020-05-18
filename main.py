@@ -1,13 +1,14 @@
 import discord
 import requests
 import re
-import sched, time
+import time
 import threading
 import os
+import aioschedule as schedule
 from collections import defaultdict
 from ics import Calendar
-from discord.ext import commands
-from datetime import datetime, timedelta
+from discord.ext import commands, tasks
+from datetime import datetime
 
 class ICSReader():
     def read(self, url):
@@ -20,46 +21,46 @@ class MyClient(discord.Client):
     a = defaultdict(list)
     months = {
         'january':'01',
-		'february':'02',
-		'march':'03',
-		'april':'04',
-		'may':'05',
-		'june':'06',
-		'july':'07',
-		'august':'08',
-		'september':'09',
-		'october':'10',
-		'november':'11',
-		'december':'12',
+        'february':'02',
+        'march':'03',
+        'april':'04',
+        'may':'05',
+        'june':'06',
+        'july':'07',
+        'august':'08',
+        'september':'09',
+        'october':'10',
+        'november':'11',
+        'december':'12',
         'jan':'01',
-		'feb':'02',
-		'mar':'03',
-		'apr':'04',
-		'jun':'06',
-		'jul':'07',
-		'aug':'08',
-		'sep':'09',
-		'oct':'10',
-		'nov':'11',
-		'dec':'12'
+        'feb':'02',
+        'mar':'03',
+        'apr':'04',
+        'jun':'06',
+        'jul':'07',
+        'aug':'08',
+        'sep':'09',
+        'oct':'10',
+        'nov':'11',
+        'dec':'12'
     }
 
     async def print_todays_birthdays(self, channel):
-        threading.Timer(3600.0, self.print_todays_birthdays).start()
         now = datetime.now()
-
         if self.a[now.month]:
             b = defaultdict(list)
             for bd in self.a[now.month]:
                 b[bd.begin.day].append(bd)
-            if now.hour == 12 and now.minute == 16:
+            if now.minute == 13:
                 if b[now.day]:
                     text = "Here are today's birthdays: \n"
                     for bd in b[now.day]:
                         text += "> " + bd.name + "\n"
-                        await channel.send(text)
+                    await channel.send(text)
                 else:
                     print("No Birthday's Today")
+            else:
+                print("it's not time yet")
         else:
             print("No birthday's this month")
 
@@ -73,8 +74,9 @@ class MyClient(discord.Client):
 
         for guild in self.guilds:
             for channel in guild.channels:
-                if str(channel) == "birthdays":
-                    await self.print_todays_birthdays(channel)
+                if str(channel) == "general":
+                    schedule.every(1).seconds.do(self.print_todays_birthdays, channel)
+
 
     async def on_message(self, message):
         if message.author == self.user:
