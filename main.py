@@ -1,14 +1,10 @@
 import discord
 import requests
 import re
-import time
-import threading
 import asyncio
 import os
-import aioschedule as schedule
 from collections import defaultdict
 from ics import Calendar
-from discord.ext import commands, tasks
 from datetime import datetime
 
 class ICSReader():
