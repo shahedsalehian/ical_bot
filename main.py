@@ -44,24 +44,28 @@ class MyClient(discord.Client):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.bg_task = self.loop.create_task(self.print_todays_birthdays())
 
     async def print_todays_birthdays(self):
         await self.wait_until_ready()
-        now = datetime.now()
-        if self.a[now.month]:
-            b = defaultdict(list)
-            for bd in self.a[now.month]:
-                b[bd.begin.day].append(bd)
-            if now.hour == 00 and b[now.day]:
-                text = "Here are today's birthdays: \n"
-                for bd in b[now.day]:
-                    text += "> " + bd.name + "\n"
 
-                for guild in self.guilds:
-                    for channel in guild.channels:
-                        if str(channel) == "🎁birthdays" or str(channel) == "general":
-                            await channel.send(text)
-        await asyncio.sleep(3600)
+        while not self.is_closed():
+            now = datetime.now()
+            if self.a[now.month]:
+                b = defaultdict(list)
+                for bd in self.a[now.month]:
+                    b[bd.begin.day].append(bd)
+                if now.hour == 00 and b[now.day]:
+                    text = "Here are today's birthdays: \n"
+                    for bd in b[now.day]:
+                        text += "> " + bd.name + "\n"
+
+                    for guild in self.guilds:
+                        for channel in guild.channels:
+                            # str(channel) == "🎁birthdays" or 
+                            if str(channel) == "general":
+                                await channel.send(text)                    
+            await asyncio.sleep(3600)
 
     async def on_ready(self):
         print('Logged on as', self.user)
@@ -70,9 +74,6 @@ class MyClient(discord.Client):
         
         for birthday in birthdays:
             self.a[birthday.begin.month].append(birthday)
-        
-        self.bg_task = self.loop.create_task(self.print_todays_birthdays())
-
 
     async def on_message(self, message):
         if message.author == self.user:
