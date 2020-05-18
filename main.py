@@ -3,6 +3,7 @@ import requests
 import re
 import time
 import threading
+import asyncio
 import os
 import aioschedule as schedule
 from collections import defaultdict
@@ -45,24 +46,26 @@ class MyClient(discord.Client):
         'dec':'12'
     }
 
-    async def print_todays_birthdays(self, channel):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    async def print_todays_birthdays(self):
+        await self.wait_until_ready()
         now = datetime.now()
         if self.a[now.month]:
             b = defaultdict(list)
             for bd in self.a[now.month]:
                 b[bd.begin.day].append(bd)
-            if now.minute == 13:
-                if b[now.day]:
-                    text = "Here are today's birthdays: \n"
-                    for bd in b[now.day]:
-                        text += "> " + bd.name + "\n"
-                    await channel.send(text)
-                else:
-                    print("No Birthday's Today")
-            else:
-                print("it's not time yet")
-        else:
-            print("No birthday's this month")
+            if now.hour == 00 and b[now.day]:
+                text = "Here are today's birthdays: \n"
+                for bd in b[now.day]:
+                    text += "> " + bd.name + "\n"
+
+                for guild in self.guilds:
+                    for channel in guild.channels:
+                        if str(channel) == "🎁birthdays" or str(channel) == "general":
+                            await channel.send(text)
+        asyncio.sleep(3600)
 
     async def on_ready(self):
         print('Logged on as', self.user)
@@ -71,11 +74,8 @@ class MyClient(discord.Client):
         
         for birthday in birthdays:
             self.a[birthday.begin.month].append(birthday)
-
-        for guild in self.guilds:
-            for channel in guild.channels:
-                if str(channel) == "general":
-                    schedule.every(1).seconds.do(self.print_todays_birthdays, channel)
+        
+        self.bg_task = self.loop.create_task(self.print_todays_birthdays())
 
 
     async def on_message(self, message):
