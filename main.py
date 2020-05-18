@@ -62,8 +62,7 @@ class MyClient(discord.Client):
 
                     for guild in self.guilds:
                         for channel in guild.channels:
-                            # str(channel) == "🎁birthdays" or 
-                            if str(channel) == "general":
+                            if str(channel) == "🎁birthdays" or str(channel) == "general":
                                 await channel.send(text)                    
             await asyncio.sleep(3600)
 
