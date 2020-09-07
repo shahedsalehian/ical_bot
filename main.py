@@ -115,7 +115,7 @@ class MyClient(discord.Client):
                 text = "> **" + birthday.name + "** is on **" + birthday.begin.format("MMMM DD") + "**"
     
                 description = birthday.description.replace('\n', '')
-                if re.match("BIRTH_YEAR?=?[0-9]{4}$", description):
+                if re.match("BIRTH_YEAR?=?[1-9][0-9]{3}$", description):
                     birth_year = int(birthday.description.split("=")[1])
                     text = self.attach_age_to_birthday(birth_year, text)
 
