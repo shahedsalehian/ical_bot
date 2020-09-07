@@ -117,12 +117,12 @@ class MyClient(discord.Client):
                 description = birthday.description.replace('\n', '')
                 if re.match("BIRTH_YEAR?=?[0-9]{4}$", description):
                     birth_year = int(birthday.description.split("=")[1])
-                    text = await self.attach_age_to_birthday(birth_year, text)
+                    text = self.attach_age_to_birthday(birth_year, text)
 
                 text += '\n'
                 await message.channel.send(text)
 
-    async def attach_age_to_birthday(self, birth_year, text):
+    def attach_age_to_birthday(self, birth_year, text):
         current_year = int(datetime.now().year)
         age = str(current_year - birth_year)
         text +=' and is turning **' + age + '** years old'
