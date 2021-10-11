@@ -78,6 +78,14 @@ async def on_message(message):
         await send_birthdays_of_month(month, message)
 
 async def send_birthdays_of_month(month, message):
+    if (month > 0) and (month <= 12):
+        if len(a[month]) == 0:
+            await message.channel.send("No Birthdays this month!")
+            return
+    else:
+        await message.channel.send("OI MATE. WHAT ARE YOU DOING?")
+        return
+
     text = "Here are the birthdays of this month: \n"
 
     for birthday in a[month]:
