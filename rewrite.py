@@ -62,21 +62,28 @@ async def on_message(message):
 
     if message.content == '$help':
         text = ("Valid input to get the birthdays of a month:\n"
-                "!bd 1 - 12\n"
-                "!bd 01 - 12\n"
-                "!bd jan - dec\n"
-                "!bd january - december\n"
-                "e.g.: `!bd 05` or `!bd 5` or `!bd may`")
+                "$bd 1 - 12\n"
+                "$bd 01 - 12\n"
+                "$bd jan - dec\n"
+                "$bd january - december\n"
+                "e.g.: `$bd 05` or `$bd 5` or `$bd may`")
         await message.channel.send(text)
 
     if re.search("\$bde? [0-1]?[0-9]", message.content):
         month = int(message.content.split(" ")[1])
-        await message.channel.send(a[month])
-        return
+        await send_birthdays_of_month(month, message)
 
     if re.search("\$bde? (?:jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|june?|july?|aug(?:ust)?|sep(?:tember)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?)", message.content.lower()):
         month = int(months[message.content.split(" ")[1].lower()])
-        await message.channel.send(month)
+        await send_birthdays_of_month(month, message)
+
+async def send_birthdays_of_month(month, message):
+    text = "Here are the birthdays of this month: \n"
+
+    for birthday in a[month]:
+        text = text + "\n" + "> **" + birthday.name + "** is on **" + birthday.begin.format("MMMM DD") + "**"
+
+    await message.channel.send(text)
         
 
 client.run(os.environ['ACCESS_TOKEN'])
