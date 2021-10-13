@@ -95,7 +95,7 @@ async def send_birthdays_of_month(month, message):
     await message.channel.send(text)
         
 
-@tasks.loop(seconds=5.0)
+@tasks.loop(seconds=3600.0)
 async def print_todays_birthdays():
     now = datetime.now()
     if a[now.month]:
