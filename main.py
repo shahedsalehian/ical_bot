@@ -90,11 +90,15 @@ async def send_birthdays_of_month(month, message):
     text = "Here are the birthdays of this month: \n"
 
     for birthday in a[month]:
-        text = text + "\n" + "> **" + birthday.name + "** is on **" + birthday.begin.format("MMMM DD") + "**"
+        text = text + "> **" + birthday.name + "** is on **" + birthday.begin.format("MMMM DD") + "**"
+        description = birthday.description.replace('\n', '')
+        if re.match("BIRTH_YEAR?=?[1-9][0-9]{3}$", description):
+            birth_year = int(birthday.description.split("=")[1])
+            text += attach_age_to_birthday(birth_year)
+        text += '\n'
 
     await message.channel.send(text)
         
-
 @tasks.loop(seconds=3600.0)
 async def print_todays_birthdays():
     now = datetime.now()
@@ -113,6 +117,10 @@ async def print_todays_birthdays():
                     if str(channel) == "🎁birthdays" or str(channel) == "general":
                         await channel.send(text)
 
+def attach_age_to_birthday(birth_year):
+        current_year = int(datetime.now().year)
+        age = str(current_year - birth_year)
+        return " and is turning **" + age + "** years old"
 
 print_todays_birthdays.start()
 client.run(os.environ['ACCESS_TOKEN'])
