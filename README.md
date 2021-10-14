@@ -8,12 +8,12 @@ Please refer to `.env.example` for application setup.
 
 
 ## Usage
-> **!help**
+> **$help**
 > Lists all commands to request birthdays of a specified month
 
-> **!bd month**
-> Use **!bd** followed by *month* in the following accepted formats
-* !bd 1
-* !bd 01
-* !bd jan
-* !bd january
+> **$bd month**
+> Use **$bd** followed by *month* in the following accepted formats
+* $bd 1
+* $bd 01
+* $bd jan
+* $bd january
