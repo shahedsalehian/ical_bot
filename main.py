@@ -44,14 +44,14 @@ months = {
 }
 
 client = discord.Client()
+reader = ICSReader()
+birthdays = reader.read(os.environ['ICAL_URL'])
+for birthday in birthdays:
+    a[birthday.begin.month].append(birthday)
 
 @client.event
 async def on_ready():
     print('We have logged in as {0.user}'.format(client))
-    reader = ICSReader()
-    birthdays = reader.read(os.environ['ICAL_URL'])
-    for birthday in birthdays:
-        a[birthday.begin.month].append(birthday)
 
 @client.event
 async def on_message(message):
@@ -118,9 +118,9 @@ async def print_todays_birthdays():
                         await channel.send(text)
 
 def attach_age_to_birthday(birth_year):
-        current_year = int(datetime.now().year)
-        age = str(current_year - birth_year)
-        return " and is turning **" + age + "** years old"
+    current_year = int(datetime.now().year)
+    age = str(current_year - birth_year)
+    return " and is turning **" + age + "** years old"
 
 print_todays_birthdays.start()
 client.run(os.environ['ACCESS_TOKEN'])
