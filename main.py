@@ -98,16 +98,16 @@ async def send_birthdays_of_month(month, message):
         text += '\n'
 
     await message.channel.send(text)
-        
+
 @tasks.loop(seconds=3600.0)
 async def print_todays_birthdays():
     now = datetime.now()
     if a[now.month]:
         b = defaultdict(list)
-        
+
         for bd in a[now.month]:
             b[bd.begin.day].append(bd)
-        
+
         if now.hour == 00 and b[now.day]:
             text = "Here are today's birthdays: \n"
             for bd in b[now.day]:
